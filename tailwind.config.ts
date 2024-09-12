@@ -7,6 +7,10 @@ const config: Config = {
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
+    fontFamily: {
+      inter: ['var(--font-inter)', 'sans-serif'],
+      balthazar: ['var(--font-balthazar)', 'sans-serif'],
+    },
     extend: {
       colors: {
         background: "var(--background)",

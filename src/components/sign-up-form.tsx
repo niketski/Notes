@@ -4,7 +4,7 @@ import { Facebook, Mail } from "lucide-react";
 
 export default function SignUpForm() {
     return (
-        <div className="bg-white border-2 border-[#ADADAD] rounded-[10px] px-[30px] md:px-[50px] py-[50px] border-dashed test">
+        <div className="bg-white border-2 border-[#ADADAD] rounded-[10px] px-[30px] md:px-[50px] py-[50px] border-dashed">
             <h2 className="font-balthazar text-[45px] text-center mb-[40px]">Sign Up</h2>
             <form>
                 <div className="mb-[15px]">

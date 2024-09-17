@@ -1,8 +1,7 @@
 import SignUpForm from "@/components/sign-up-form";
-import { signOut } from "next-auth/react";
 
 export default function SignUpPage() {
-    console.log(signOut);
+
     return (
         <main className="min-h-[100vh]">
             <section className="py-[60px]">

@@ -1,12 +1,14 @@
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Facebook, Mail } from "lucide-react";
+import * as actions from '@/actions';
+import * as userActions from '@/actions/user';
 
 export default function SignUpForm() {
     return (
         <div className="bg-white border-2 border-[#ADADAD] rounded-[10px] px-[30px] md:px-[50px] py-[50px] border-dashed">
             <h2 className="font-balthazar text-[45px] text-center mb-[40px]">Sign Up</h2>
-            <form>
+            <form action={userActions.createUser}>
                 <div className="mb-[15px]">
                     <label 
                         htmlFor="name" 
@@ -47,8 +49,9 @@ export default function SignUpForm() {
                     <Input
                         className="leading-[35px] bg-light h-[45px] placeholder:text-[#888888] rounded-[5px] px-[15px] shadow-none border-transparent"
                         type="file"
-                        name="file"
-                        id="file"/>
+                        name="avatar"
+                        accept="image/png, image/gif, image/jpeg"
+                        id="avatar"/>
                 </div>
                 <Button 
                     type="submit" 
@@ -57,17 +60,21 @@ export default function SignUpForm() {
 
             <div className="pt-10">
                 <p className="text-center text-dark mb-[20px]">Or Signup using</p>
-                <div className="text-center">
-                    <Button 
-                        type="button"
-                        className="bg-[#1877F2] text-white inline-flex items-center justify-center w-[40px] h-[40px] rounded-[5px] p-0 mr-[20px]">
-                        <Facebook/>
-                    </Button>
-                    <Button 
-                        type="button"
-                        className="bg-[#DB4437] text-white inline-flex items-center justify-center w-[40px] h-[40px] rounded-[5px] p-0">
-                        <Mail/>
-                    </Button>
+                <div className="flex justify-center items-center">
+                    <form action={actions.signIn.bind(null,  'facebook')}>
+                        <Button 
+                            type="submit"
+                            className="bg-[#1877F2] text-white inline-flex items-center justify-center w-[40px] h-[40px] rounded-[5px] p-0 mr-[20px]">
+                            <Facebook/>
+                        </Button>
+                    </form>
+                    <form action={actions.signIn.bind(null, 'google')}>
+                        <Button 
+                            type="submit"
+                            className="bg-[#DB4437] text-white inline-flex items-center justify-center w-[40px] h-[40px] rounded-[5px] p-0">
+                            <Mail/>
+                        </Button>
+                    </form>
                 </div>
             </div>
         </div>

@@ -4,16 +4,16 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Facebook, Mail } from "lucide-react";
 import * as actions from '@/actions';
-import * as userActions from '@/actions/user';
 import { createUser } from "@/actions/user";
-import { ChangeEvent, ChangeEventHandler, useState, useRef, useActionState } from "react";
+import { ChangeEvent, useState, useRef} from "react";
 import Image from "next/image";
 import { X } from "lucide-react";
 import { useFormState } from "react-dom";
 import FormButton from "./form-button";
 
 export default function SignUpForm() {
-    const [formState, formAction]     = useFormState(createUser, { errors: {} });
+
+    const [formState, formAction]     = useFormState(createUser.bind(null, ), { errors: {} });
     const [previewUrl, setPreviewUrl] = useState<string | ArrayBuffer | null>(null);
     const fileInputRef                = useRef<HTMLInputElement | null>(null);
 
@@ -52,7 +52,7 @@ export default function SignUpForm() {
     }
 
     console.log(formState);
-
+    console.log(formState.errors.name);
     return (
         <div className="bg-white border-2 border-[#ADADAD] rounded-[10px] px-[30px] md:px-[50px] py-[50px] border-dashed">
             <h2 className="font-balthazar text-[45px] text-center mb-[40px]">Sign Up</h2>
@@ -60,42 +60,53 @@ export default function SignUpForm() {
                 <div className="mb-[15px]">
                     <label 
                         htmlFor="name" 
-                        className="block mb-3">Namevent:</label>
+                        className="block mb-3">Name:</label>
                     <Input
-                        className="bg-light h-[45px] placeholder:text-[#888888] rounded-[5px] px-[15px] shadow-none border-transparent"
+                        className={`bg-light h-[45px] placeholder:text-[#888888] rounded-[5px] px-[15px] shadow-none border-transparent ${formState.errors.name ? 'border border-danger' : ''}`}
                         type="text"
                         name="name"
                         id="name"
                         placeholder="Enter your name"/>
+
+                    {formState.errors.name && 
+                        <p className="text-danger text-[12px]">{formState.errors.name[0]}</p>
+                    }
                 </div>
                 <div className="mb-[15px]">
                     <label 
                         htmlFor="email" 
                         className="block mb-3">Email:</label>
                     <Input
-                        className="bg-light h-[45px] placeholder:text-[#888888] rounded-[5px] px-[15px] shadow-none border-transparent"
+                        className={`bg-light h-[45px] placeholder:text-[#888888] rounded-[5px] px-[15px] shadow-none border-transparent ${formState.errors.email ? 'border border-danger' : ''}`}
                         type="email"
                         name="email"
                         id="email"
                         placeholder="Enter your email"/>
+
+                    {formState.errors.email && 
+                        <p className="text-danger text-[12px]">{formState.errors.email[0]}</p>
+                    }
                 </div>
                 <div className="mb-[15px]">
                     <label 
                         htmlFor="password" 
                         className="block mb-3">Password:</label>
                     <Input
-                        className="bg-light h-[45px] placeholder:text-[#888888] rounded-[5px] px-[15px] shadow-none border-transparent"
+                        className={`bg-light h-[45px] placeholder:text-[#888888] rounded-[5px] px-[15px] shadow-none border-transparent ${formState.errors.password ? 'border border-danger' : ''}`}
                         type="password"
                         name="password"
                         id="password"
                         placeholder="Enter your password"/>
+                    {formState.errors.password && 
+                        <p className="text-danger text-[12px]">{formState.errors.password[0]}</p>
+                    }
                 </div>
                 <div className="mb-[15px]">
                     <label 
                         htmlFor="avatar" 
                         className="block mb-3">Avatar:</label>
                     <div 
-                        className="w-[70px] h-[70px] rounded-full border border-dashed border-dark bg-light relative">
+                        className={`w-[70px] h-[70px] rounded-full border border-dashed bg-light relative ${formState.errors.avatar ? 'border-danger' : 'border-dark'}`}>
                         
                         {previewUrl &&
 
@@ -125,7 +136,13 @@ export default function SignUpForm() {
                             id="avatar"
                             ref={fileInputRef}
                             onChange={handleInputFileChange}/>
+
+                    
                     </div>
+
+                    {formState.errors.avatar && 
+                        <p className="text-danger text-[12px]">{formState.errors.avatar[0]}</p>
+                    }
                     
                 </div>
                 <FormButton>Submit</FormButton>

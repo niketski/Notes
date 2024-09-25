@@ -1,54 +1,88 @@
 'use server'
 
-import userSchema, { IUserSchema } from '@/model/user';
-import { error } from 'console';
-import mongoose, { MongooseError, Error } from 'mongoose';
+import userSchema from '@/model/user';
 import { z } from 'zod';
+import { uploadImage } from '@/lib/cloudinary';
+import { UploadApiResponse } from 'cloudinary';
 
 interface CreateUserFormState {
     errors: {
-        name?: string,
-        email?: string,
-        password?: string,
-        avatar?: string
+        name?: string[],
+        email?: string[],
+        password?: string[],
+        avatar?: string[]
     }
 }
 
-interface FieldErrors {
-    [key: string] : string
-}
-
 export async function createUser(formState: CreateUserFormState, formData: FormData): Promise<CreateUserFormState> {
-
+    console.clear();
     // set data validation for each field using zod
+
+    const acceptedImageFileTypes = ['image/png', 'image/jpeg'];
     const userDataSchema = z.object({
-        name: z.string().min(3, { message: 'The name must be at least 3 characters.' }),
-        email: z.string().email({ message: 'Please enter a valid email.' }),
-        password: z.string().min(8, { message: 'Please use a strong password.' }),
-        avatar: z.string()
+        name: z.string().min(1, { message: 'Name is required' }).min(3, { message: 'The name must be at least 3 characters' }),
+        email: z.string().min(1, { message: 'Email is required' }).email({ message: 'Please enter a valid email' }),
+        password: z.string().min(1, { message: 'Password is required' }).min(5, { message: 'Please use a strong password' }),
+        avatar: z.instanceof(File, { message: 'Please provide a valid image file' }).refine(avatar => acceptedImageFileTypes.includes(avatar.type))
     });
 
-    const userData = userDataSchema.safeParse({
-        name: formData.get('name'),
-        email: formData.get('email'),
-        password: formData.get('password'),
-        avatar: formData.get('avatar')
+    const inputName  = formData.get('name');
+    const inputEmail = formData.get('email');
+    const inputPassword   = formData.get('password');
+    const inputAvatar = formData.get('avatar')   ;
+    const result = userDataSchema.safeParse({
+        name: inputName,
+        email: inputEmail,
+        password: inputPassword,
+        avatar: inputAvatar
     });
 
+    // validate field errors
+    if(!result.success) {
 
-    // get user input from sign up form
-    const name     = formData.get('name');
-    const email    = formData.get('email');
-    const password = formData.get('password');
-    const avatar   = formData.get('avatar');
-    let fieldErrors: FieldErrors = {};
-
-    console.log(formData);
-    
-    return {
-        errors: {
-            name: 'asdasdds'
+        return {
+            errors: result.error.flatten().fieldErrors
         }
+    }
+
+    // check of the email has been used
+    const existingUser = await userSchema.findOne({ email: inputEmail });
+        
+    if(existingUser) {
+        return {
+            errors: {
+                email: ['The email has been used. Please use unique email']
+            }
+        }
+    }
+
+    try {
+
+        // upload image file to cloudinary
+        const image = await uploadImage(inputAvatar as File) as UploadApiResponse;
+            
+        // create new user
+        const newUser = await userSchema.create({
+            name: inputName,
+            email: inputEmail,
+            password: inputPassword,
+            avatar: image.secure_url
+        });
+
+        await newUser.save();
+
+        return {
+            errors: {}
+        }
+
+    } catch(error: any) {
+
+        console.log(error);
+
+        return {
+            errors: {}
+        }
+
     }
 
 }

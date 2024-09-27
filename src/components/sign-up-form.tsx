@@ -2,8 +2,6 @@
 
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import { Facebook, Mail } from "lucide-react";
-import * as actions from '@/actions';
 import { createUser } from "@/actions/user";
 import { ChangeEvent, useState, useRef, useEffect} from "react";
 import Image from "next/image";
@@ -11,6 +9,7 @@ import { X } from "lucide-react";
 import { useFormState } from "react-dom";
 import FormButton from "./form-button";
 import { useToast } from "@/hooks/use-toast";
+import ProviderLoginList from "./provider-login-list";
 
 export default function SignUpForm() {
 
@@ -182,23 +181,8 @@ export default function SignUpForm() {
                 <FormButton>Submit</FormButton>
             </form>
             <div className="pt-10">
-                <p className="text-center text-dark mb-[20px]">Or Signup using</p>
-                <div className="flex justify-center items-center">
-                    <form action={actions.signIn.bind(null,  'facebook')}>
-                        <Button 
-                            type="submit"
-                            className="bg-[#1877F2] text-white inline-flex items-center justify-center w-[40px] h-[40px] rounded-[5px] p-0 mr-[20px]">
-                            <Facebook/>
-                        </Button>
-                    </form>
-                    <form action={actions.signIn.bind(null, 'google')}>
-                        <Button 
-                            type="submit"
-                            className="bg-[#DB4437] text-white inline-flex items-center justify-center w-[40px] h-[40px] rounded-[5px] p-0">
-                            <Mail/>
-                        </Button>
-                    </form>
-                </div>
+                <p className="text-center text-dark mb-[20px]">Or login using</p>
+                <ProviderLoginList/>
             </div>
         </div>
     );

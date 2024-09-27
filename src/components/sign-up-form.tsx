@@ -10,6 +10,7 @@ import { useFormState } from "react-dom";
 import FormButton from "./form-button";
 import { useToast } from "@/hooks/use-toast";
 import ProviderLoginList from "./provider-login-list";
+import { useSession } from "next-auth/react";
 
 export default function SignUpForm() {
 
@@ -18,6 +19,7 @@ export default function SignUpForm() {
     const fileInputRef                = useRef<HTMLInputElement | null>(null);
     const formRef                     = useRef<HTMLFormElement | null>(null); 
     const { toast }                   = useToast();
+    const { data: session, status } = useSession();
 
     const handleInputFileChange = (event: ChangeEvent<HTMLInputElement>): void => {
         const file = event.target.files?.[0];
@@ -78,12 +80,11 @@ export default function SignUpForm() {
                 });
 
             }
-        }
-
-       
-    
+        }   
 
     }, [formState.success]);
+
+    console.log(session, status);
 
 
     return (

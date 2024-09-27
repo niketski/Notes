@@ -4,20 +4,24 @@ import userSchema from '@/model/user';
 import { z } from 'zod';
 import { uploadImage } from '@/lib/cloudinary';
 import { UploadApiResponse } from 'cloudinary';
+import bcrypt from 'bcrypt';
 
 interface CreateUserFormState {
     errors: {
         name?: string[],
         email?: string[],
         password?: string[],
-        avatar?: string[]
-    }
+        avatar?: string[],
+        _form?: string
+    },
+    data?: string
+    success: boolean
 }
 
 export async function createUser(formState: CreateUserFormState, formData: FormData): Promise<CreateUserFormState> {
     console.clear();
+    
     // set data validation for each field using zod
-
     const acceptedImageFileTypes = ['image/png', 'image/jpeg'];
     const userDataSchema = z.object({
         name: z.string().min(1, { message: 'Name is required' }).min(3, { message: 'The name must be at least 3 characters' }),
@@ -41,7 +45,9 @@ export async function createUser(formState: CreateUserFormState, formData: FormD
     if(!result.success) {
 
         return {
-            errors: result.error.flatten().fieldErrors
+            ...formState,
+            errors: result.error.flatten().fieldErrors,
+
         }
     }
 
@@ -50,9 +56,10 @@ export async function createUser(formState: CreateUserFormState, formData: FormD
         
     if(existingUser) {
         return {
+            ...formState,
             errors: {
                 email: ['The email has been used. Please use unique email']
-            }
+            },
         }
     }
 
@@ -60,27 +67,34 @@ export async function createUser(formState: CreateUserFormState, formData: FormD
 
         // upload image file to cloudinary
         const image = await uploadImage(inputAvatar as File) as UploadApiResponse;
+
+        // create hash password 
+        const hashedPassword = await bcrypt.hash(inputPassword as string, 10);
             
         // create new user
         const newUser = await userSchema.create({
             name: inputName,
             email: inputEmail,
-            password: inputPassword,
+            password: hashedPassword,
             avatar: image.secure_url
         });
 
         await newUser.save();
 
         return {
-            errors: {}
+            ...formState,
+            errors: {},
+            data: JSON.stringify(newUser),
+            success: true
         }
 
     } catch(error: any) {
 
-        console.log(error);
-
         return {
-            errors: {}
+            ...formState,
+            errors: {
+                _form: error.message
+            }
         }
 
     }

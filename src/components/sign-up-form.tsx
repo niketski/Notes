@@ -5,17 +5,20 @@ import { Button } from "./ui/button";
 import { Facebook, Mail } from "lucide-react";
 import * as actions from '@/actions';
 import { createUser } from "@/actions/user";
-import { ChangeEvent, useState, useRef} from "react";
+import { ChangeEvent, useState, useRef, useEffect} from "react";
 import Image from "next/image";
 import { X } from "lucide-react";
 import { useFormState } from "react-dom";
 import FormButton from "./form-button";
+import { useToast } from "@/hooks/use-toast";
 
 export default function SignUpForm() {
 
-    const [formState, formAction]     = useFormState(createUser.bind(null, ), { errors: {} });
+    const [formState, formAction]     = useFormState(createUser.bind(null, ), { errors: {}, success: false });
     const [previewUrl, setPreviewUrl] = useState<string | ArrayBuffer | null>(null);
     const fileInputRef                = useRef<HTMLInputElement | null>(null);
+    const formRef                     = useRef<HTMLFormElement | null>(null); 
+    const { toast }                   = useToast();
 
     const handleInputFileChange = (event: ChangeEvent<HTMLInputElement>): void => {
         const file = event.target.files?.[0];
@@ -51,12 +54,43 @@ export default function SignUpForm() {
 
     }
 
-    console.log(formState);
-    console.log(formState.errors.name);
+    useEffect(() => {
+
+        // reset form and pop up message after successful submition
+        if(formState.success === true) {
+
+            if(formRef) {
+
+                setPreviewUrl(null);
+
+                formRef.current?.reset();
+
+                console.log('You have created your profile successfully.');
+
+                if(fileInputRef.current) {
+
+                    fileInputRef.current.value = '';
+                    
+                }
+
+                // show popup message
+                toast({
+                    title: "You have registered successfully!",
+                });
+
+            }
+        }
+
+       
+    
+
+    }, [formState.success]);
+
+
     return (
         <div className="bg-white border-2 border-[#ADADAD] rounded-[10px] px-[30px] md:px-[50px] py-[50px] border-dashed">
             <h2 className="font-balthazar text-[45px] text-center mb-[40px]">Sign Up</h2>
-            <form action={formAction}>
+            <form action={formAction} ref={formRef}>
                 <div className="mb-[15px]">
                     <label 
                         htmlFor="name" 
@@ -146,9 +180,6 @@ export default function SignUpForm() {
                     
                 </div>
                 <FormButton>Submit</FormButton>
-                {/* <Button 
-                    type="submit" 
-                    className="bg-dark text-white font-bold text-[16px] leading-none h-auto py-[14.5px] px-[29.5px] mt-[40px]">Submit</Button> */}
             </form>
             <div className="pt-10">
                 <p className="text-center text-dark mb-[20px]">Or Signup using</p>

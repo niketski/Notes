@@ -13,6 +13,16 @@ const { handlers: { GET, POST }, signIn, signOut } = NextAuth({
             clientSecret: process.env.FACEBOOK_CLIENT_SECRET!
         })
     ],
+    pages: {
+        signIn: '/',  // Custom sign-in page
+        error: '/',    // Custom error page
+    },
+    callbacks: {
+        async redirect({ url, baseUrl }) {
+          // Customize the redirect behavior
+          return baseUrl; // You can return the base URL or another custom URL
+        },
+      },
 });
 
 export { GET, POST, signIn, signOut };

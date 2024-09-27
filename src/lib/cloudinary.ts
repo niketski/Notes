@@ -19,7 +19,7 @@ export const uploadImage = async (file: File) => {
     const arrayBuffer = await file.arrayBuffer();
     const buffer      = new Uint8Array(arrayBuffer);
     const result      = await new Promise((resolve, reject) => {
-        cloudinary.uploader.upload_stream([], (error, uploadResult) => {
+        cloudinary.uploader.upload_stream({}, (error, uploadResult) => {
 
             if(error) {
                 return reject(error);

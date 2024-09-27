@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Balthazar } from 'next/font/google';
+import Providers from "@/components/providers";
+import { Toaster } from "@/components/ui/toaster";
 
 import "./globals.css";
 
@@ -27,13 +29,17 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
   return (
-    <html lang="en">
-      <body
-        className={`antialiased ${inter.variable} ${balthazar.variable} font-inter text-[16px] leading-[24px] text-dark bg-main`}
-      >
-        {children}
-      </body>
-    </html>
+    <Providers>
+      <html lang="en">
+        <body
+          className={`antialiased ${inter.variable} ${balthazar.variable} font-inter text-[16px] leading-[24px] text-dark bg-main`}
+        >
+          {children}
+          <Toaster/>
+        </body>
+      </html>
+    </Providers>
   );
 }

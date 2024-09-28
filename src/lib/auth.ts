@@ -1,9 +1,8 @@
 import NextAuth from 'next-auth';
 import Google from 'next-auth/providers/google';
 import Facebook from 'next-auth/providers/facebook';
-import { MongoDBAdapter } from "@auth/mongodb-adapter"
+import { MongoDBAdapter } from '@auth/mongodb-adapter';
 import client from './db';
-import userModel from '@/model/user';
 
 const { handlers: { GET, POST }, signIn, signOut } = NextAuth({
     adapter: MongoDBAdapter(client),
@@ -42,7 +41,7 @@ const { handlers: { GET, POST }, signIn, signOut } = NextAuth({
         //     return true;
 
         // },
-        async redirect({ url, baseUrl }) {
+        async redirect({ baseUrl }) {
           // Customize the redirect behavior
           return baseUrl; // You can return the base URL or another custom URL
         },

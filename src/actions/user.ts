@@ -87,15 +87,30 @@ export async function createUser(formState: CreateUserFormState, formData: FormD
             data: JSON.stringify(newUser),
             success: true
         }
+        
 
-    } catch(error: any) {
+    } catch(error: unknown) {
 
-        return {
-            ...formState,
-            errors: {
-                _form: error.message
+        if(error instanceof Error) {
+            
+            return {
+                ...formState,
+                errors: {
+                    _form: error.message
+                }
             }
+
+        } else {
+
+            return {
+                ...formState,
+                errors: {
+                    _form: 'Failed to create user'
+                }
+            }
+
         }
+        
 
     }
 

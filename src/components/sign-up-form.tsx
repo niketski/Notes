@@ -2,7 +2,7 @@
 
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import { createUser } from "@/actions/user";
+import { userSignup } from "@/actions/user-signup";
 import { ChangeEvent, useState, useRef, useEffect} from "react";
 import Image from "next/image";
 import { X } from "lucide-react";
@@ -13,7 +13,7 @@ import ProviderLoginList from "./provider-login-list";
 
 export default function SignUpForm() {
 
-    const [formState, formAction]     = useFormState(createUser.bind(null, ), { errors: {}, success: false });
+    const [formState, formAction]     = useFormState(userSignup, { errors: {}, success: false });
     const [previewUrl, setPreviewUrl] = useState<string | ArrayBuffer | null>(null);
     const fileInputRef                = useRef<HTMLInputElement | null>(null);
     const formRef                     = useRef<HTMLFormElement | null>(null); 
@@ -64,7 +64,6 @@ export default function SignUpForm() {
 
                 formRef.current?.reset();
 
-                console.log('You have created your profile successfully.');
 
                 if(fileInputRef.current) {
 

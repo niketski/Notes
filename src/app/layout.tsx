@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Balthazar } from 'next/font/google';
 import Providers from "@/components/providers";
 import { Toaster } from "@/components/ui/toaster";
+import Header from "@/components/header";
 
 import "./globals.css";
 
@@ -36,6 +37,7 @@ export default function RootLayout({
         <body
           className={`antialiased ${inter.variable} ${balthazar.variable} font-inter text-[16px] leading-[24px] text-dark bg-main`}
         >
+          <Header/>
           {children}
           <Toaster/>
         </body>

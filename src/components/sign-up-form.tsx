@@ -10,6 +10,7 @@ import { useFormState } from "react-dom";
 import FormButton from "./form-button";
 import { useToast } from "@/hooks/use-toast";
 import ProviderLoginList from "./provider-login-list";
+import { useRouter } from "next/navigation";
 
 export default function SignUpForm() {
 
@@ -18,6 +19,7 @@ export default function SignUpForm() {
     const fileInputRef                = useRef<HTMLInputElement | null>(null);
     const formRef                     = useRef<HTMLFormElement | null>(null); 
     const { toast }                   = useToast();
+    const router                      = useRouter();
 
     const handleInputFileChange = (event: ChangeEvent<HTMLInputElement>): void => {
         const file = event.target.files?.[0];
@@ -75,6 +77,13 @@ export default function SignUpForm() {
                 toast({
                     title: "You have registered successfully!",
                 });
+                
+                // redirect to login page after 1 second
+                setTimeout(() => {
+
+                    router.push('/login');
+
+                }, 1000);
 
             }
         }   

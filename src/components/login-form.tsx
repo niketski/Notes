@@ -7,8 +7,8 @@ import FormButton from "./form-button";
 import userLogin from "@/actions/user-login";
 import { useRef, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { signIn } from "next-auth/react";
-import { useRouter } from "next/router";
+// import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 
 export default function LoginForm() {
@@ -27,6 +27,12 @@ export default function LoginForm() {
             toast({
                 title: "You have logged in successfully!",
             });
+
+            setTimeout(() => {
+
+                router.push('/');
+
+            }, 1000);
         }
 
     }, [formState.success]);

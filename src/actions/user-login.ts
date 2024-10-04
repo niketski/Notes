@@ -4,8 +4,8 @@ import z from 'zod';
 import userModel from '@/model/user';
 import bcrypt from 'bcrypt';
 import { IUserSchema } from '@/model/user';
-import { redirect } from 'next/dist/server/api-utils';
 import { signIn } from '@/lib/auth';
+import { redirect } from 'next/navigation';
 
 interface userLoginFormState {
     errors: {
@@ -77,11 +77,19 @@ export default async function userLogin(formState: userLoginFormState, formData:
             }
         }
         
+        await signIn('credentials', {
+            redirect: false,
+            email: inputEmail,
+            password: inputPassword
+        });
+
         return {
             ...formState,
             errors: {},
             success: true
         }
+
+        
         
 
     } catch(error: unknown) {
@@ -105,13 +113,12 @@ export default async function userLogin(formState: userLoginFormState, formData:
             }
 
         }
+
     } finally {
 
-        await signIn('credentials', {
-            redirectTo: '/',
-            email: inputEmail,
-            password: inputPassword
-        });
+        
 
     }
+
+    
 }

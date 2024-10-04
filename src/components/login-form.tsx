@@ -5,6 +5,7 @@ import ProviderLoginList from "./provider-login-list";
 import { Input } from "./ui/input";
 import FormButton from "./form-button";
 import userLogin from "@/actions/user-login";
+<<<<<<< HEAD
 import { useRef, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { signIn } from "next-auth/react";
@@ -30,11 +31,21 @@ export default function LoginForm() {
         }
 
     }, [formState.success]);
+=======
+
+
+export default function LoginForm() {
+    const [formState, formAction]     = useFormState(userLogin, { errors: {}, success: false });
+>>>>>>> 47e26c1fd5a370604d38f8d880cfa098d437e029
     
     return (
         <div className="bg-white border-2 border-[#ADADAD] rounded-[10px] px-[30px] md:px-[50px] py-[50px] border-dashed">
             <h2 className="font-balthazar text-[45px] text-center mb-[40px]">Login</h2>
+<<<<<<< HEAD
             <form action={formAction} ref={formRef}>
+=======
+            <form action={formAction}>
+>>>>>>> 47e26c1fd5a370604d38f8d880cfa098d437e029
                 <div className="mb-[15px]">
                     <label 
                         htmlFor="email" 

@@ -6,7 +6,7 @@ import { uploadImage } from '@/lib/cloudinary';
 import { UploadApiResponse } from 'cloudinary';
 import bcrypt from 'bcrypt';
 
-interface CreateUserFormState {
+interface UserSignupFormState {
     errors: {
         name?: string[],
         email?: string[],
@@ -18,7 +18,7 @@ interface CreateUserFormState {
     success: boolean
 }
 
-export async function createUser(formState: CreateUserFormState, formData: FormData): Promise<CreateUserFormState> {
+export async function userSignup(formState: UserSignupFormState, formData: FormData): Promise<UserSignupFormState> {
     console.clear();
     
     // set data validation for each field using zod

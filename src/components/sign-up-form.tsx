@@ -2,7 +2,7 @@
 
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import { createUser } from "@/actions/user";
+import { userSignup } from "@/actions/user-signup";
 import { ChangeEvent, useState, useRef, useEffect} from "react";
 import Image from "next/image";
 import { X } from "lucide-react";
@@ -10,14 +10,16 @@ import { useFormState } from "react-dom";
 import FormButton from "./form-button";
 import { useToast } from "@/hooks/use-toast";
 import ProviderLoginList from "./provider-login-list";
+import { useRouter } from "next/navigation";
 
 export default function SignUpForm() {
 
-    const [formState, formAction]     = useFormState(createUser.bind(null, ), { errors: {}, success: false });
+    const [formState, formAction]     = useFormState(userSignup, { errors: {}, success: false });
     const [previewUrl, setPreviewUrl] = useState<string | ArrayBuffer | null>(null);
     const fileInputRef                = useRef<HTMLInputElement | null>(null);
     const formRef                     = useRef<HTMLFormElement | null>(null); 
     const { toast }                   = useToast();
+    const router                      = useRouter();
 
     const handleInputFileChange = (event: ChangeEvent<HTMLInputElement>): void => {
         const file = event.target.files?.[0];
@@ -64,7 +66,6 @@ export default function SignUpForm() {
 
                 formRef.current?.reset();
 
-                console.log('You have created your profile successfully.');
 
                 if(fileInputRef.current) {
 
@@ -76,6 +77,13 @@ export default function SignUpForm() {
                 toast({
                     title: "You have registered successfully!",
                 });
+                
+                // redirect to login page after 1 second
+                setTimeout(() => {
+
+                    router.push('/login');
+
+                }, 1000);
 
             }
         }   

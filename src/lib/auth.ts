@@ -1,12 +1,49 @@
 import NextAuth from 'next-auth';
 import Google from 'next-auth/providers/google';
 import Facebook from 'next-auth/providers/facebook';
+import CredentialsProvider from 'next-auth/providers/credentials';
 import { MongoDBAdapter } from '@auth/mongodb-adapter';
 import client from './db';
+import userModel from '@/model/user';
+import { NextAuthConfig } from 'next-auth';
 
-const { handlers: { GET, POST }, signIn, signOut } = NextAuth({
+export const nextAuthConfig: NextAuthConfig = {
     adapter: MongoDBAdapter(client),
+    session: {
+        strategy: 'jwt'
+    },
     providers: [
+        CredentialsProvider({
+            name: 'Login',
+            credentials: {
+                email: {
+                    label: 'Email',
+                    type: 'email',
+                    placeholder: 'Enter your email'
+                },
+                password: {
+                    label: 'Password',
+                    type: 'password',
+                    placeholder: 'Enter your password'
+                }
+            },
+            async authorize(credentials) {
+
+                const existingUser = await userModel.findOne({ email: credentials.email });
+
+                console.log('existing: ', existingUser);
+                
+                if(existingUser) {
+
+                    return existingUser;
+
+                } else {
+
+                    return null;
+
+                }
+            }
+        }),
         Google({
             clientId: process.env.GOOGLE_CLIENT_ID!,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET!
@@ -14,38 +51,43 @@ const { handlers: { GET, POST }, signIn, signOut } = NextAuth({
         Facebook({
             clientId: process.env.FACEBOOK_CLIENT_ID!,
             clientSecret: process.env.FACEBOOK_CLIENT_SECRET!
-        })
+        }),
     ],
-    pages: {
-        signIn: '/sign-up',  // Custom sign-in page
-        error: '/qweqweq',    // Custom error page
-    },
     callbacks: {
+    //    async session({ session, user, token }) {
+
+
+    //         return session;
+        
+    //    },
+        async jwt({ token, user, account, profile, isNewUser }) {
+
+            console.log('callback: jwt', token);
+            console.log(user);
+
+            if(user) {
+                token.id = user.id;
+            }
+
+            return token;
+        },
         // async signIn({ user, account, profile, email, credentials }) {
 
-        //     // check if the user has the same email exist in our database
-        //     const isExistingUser = await userModel.findOne({ email: user.email });
-
-        //     // create use to our databse if the current user doesn't exist
-        //     if(!isExistingUser) {
-
-        //         const newUser = await userModel.create({
-        //             name: user.name,
-        //             email: user.email,
-        //         });
-
-        //     }
-        //     console.log('current: ', user);
-        //     console.log('existing: ', isExistingUser);
-
+        //     console.log('callback: sign in');
+            
         //     return true;
 
         // },
-        async redirect({ baseUrl }) {
-          // Customize the redirect behavior
-          return baseUrl; // You can return the base URL or another custom URL
-        },
+        // async redirect({ baseUrl }) {
+        //     console.log('callback: redirect');
+
+        //   // Customize the redirect behavior
+        //   return baseUrl; // You can return the base URL or another custom URL
+        // },
       },
-});
+};
+
+
+const { handlers: { GET, POST }, signIn, signOut } = NextAuth(nextAuthConfig);
 
 export { GET, POST, signIn, signOut };

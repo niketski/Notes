@@ -28,6 +28,7 @@ export default function LoginForm() {
                 title: "You have logged in successfully!",
             });
 
+            // redirect to home after 1 second
             setTimeout(() => {
 
                 router.push('/');

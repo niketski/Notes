@@ -145,7 +145,7 @@ export default function SignUpForm() {
                             htmlFor="avatar" 
                             className="block mb-3">Avatar:</label>
                         <div 
-                            className={`w-[70px] h-[70px] rounded-full border border-dashed bg-light relative ${formState.errors.avatar ? 'border-danger' : 'border-dark'}`}>
+                            className={`w-[70px] h-[70px] rounded-full border border-dashed bg-light relative ${formState.errors.image ? 'border-danger' : 'border-dark'}`}>
                             
                             {previewUrl &&
 
@@ -170,17 +170,17 @@ export default function SignUpForm() {
                             <Input
                                 className="leading-[35px] bg-light placeholder:text-[#888888] px-[15px] shadow-none border-transparent opacity-0 absolute top-0 left-0 w-full h-full rounded-full cursor-pointer"
                                 type="file"
-                                name="avatar"
+                                name="image"
                                 accept="image/png, image/gif, image/jpeg"
-                                id="avatar"
+                                id="image"
                                 ref={fileInputRef}
                                 onChange={handleInputFileChange}/>
 
                         
                         </div>
 
-                        {formState.errors.avatar && 
-                            <p className="text-danger text-[12px]">{formState.errors.avatar[0]}</p>
+                        {formState.errors.image && 
+                            <p className="text-danger text-[12px]">{formState.errors.image[0]}</p>
                         }
                         
                     </div>

@@ -4,7 +4,7 @@ export interface IUserSchema {
     name: string,
     email: string,
     password: string,
-    avatar: string
+    image: string
 }
 
 const userSchema = new mongoose.Schema<IUserSchema>(
@@ -22,7 +22,7 @@ const userSchema = new mongoose.Schema<IUserSchema>(
             type: String,
             required: true,
         },
-        avatar: {
+        image: {
             type: String,
             required: true
         }

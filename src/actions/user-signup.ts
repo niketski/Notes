@@ -11,7 +11,7 @@ interface UserSignupFormState {
         name?: string[],
         email?: string[],
         password?: string[],
-        avatar?: string[],
+        image?: string[],
         _form?: string
     },
     data?: string
@@ -27,18 +27,18 @@ export async function userSignup(formState: UserSignupFormState, formData: FormD
         name: z.string().min(1, { message: 'Name is required' }).min(3, { message: 'The name must be at least 3 characters' }),
         email: z.string().min(1, { message: 'Email is required' }).email({ message: 'Please enter a valid email' }),
         password: z.string().min(1, { message: 'Password is required' }).min(5, { message: 'Please use a strong password' }),
-        avatar: z.instanceof(File, { message: 'Please provide a valid image file' }).refine(avatar => acceptedImageFileTypes.includes(avatar.type))
+        image: z.instanceof(File, { message: 'Please provide a valid image file' }).refine(image => acceptedImageFileTypes.includes(image.type))
     });
 
     const inputName  = formData.get('name');
     const inputEmail = formData.get('email');
     const inputPassword   = formData.get('password');
-    const inputAvatar = formData.get('avatar')   ;
+    const inputAvatar = formData.get('image')   ;
     const result = userDataSchema.safeParse({
         name: inputName,
         email: inputEmail,
         password: inputPassword,
-        avatar: inputAvatar
+        image: inputAvatar
     });
 
     // validate field errors
@@ -76,7 +76,7 @@ export async function userSignup(formState: UserSignupFormState, formData: FormD
             name: inputName,
             email: inputEmail,
             password: hashedPassword,
-            avatar: image.secure_url
+            image: image.secure_url
         });
 
         await newUser.save();
@@ -91,19 +91,23 @@ export async function userSignup(formState: UserSignupFormState, formData: FormD
 
     } catch(error: unknown) {
 
+        console.log(error);
+
         if(error instanceof Error) {
             
             return {
                 ...formState,
                 errors: {
                     _form: error.message
-                }
+                },
+                success: false
             }
 
         } else {
 
             return {
                 ...formState,
+                success: false,
                 errors: {
                     _form: 'Failed to create user'
                 }

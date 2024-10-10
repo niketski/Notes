@@ -5,7 +5,6 @@ import userModel from '@/model/user';
 import bcrypt from 'bcrypt';
 import { IUserSchema } from '@/model/user';
 import { signIn } from '@/lib/auth';
-import { redirect } from 'next/navigation';
 
 interface userLoginFormState {
     errors: {

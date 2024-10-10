@@ -54,13 +54,21 @@ export const authConfig: NextAuthConfig = {
         }),
     ],
     callbacks: {
+        async redirect({ url, baseUrl }) {
+            
+            console.log('callback: redirect');
+
+            return baseUrl;
+
+        },
         async jwt({ token, user, account, profile, isNewUser }) {
 
-            console.log('callback: jwt', token);
-            console.log(user);
+            console.log('callback: jwt');
 
             if(user) {
+
                 token.id = user.id;
+
             }
 
             return token;

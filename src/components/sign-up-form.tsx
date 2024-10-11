@@ -11,6 +11,7 @@ import FormButton from "./form-button";
 import { useToast } from "@/hooks/use-toast";
 import ProviderLoginList from "./provider-login-list";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function SignUpForm() {
 
@@ -187,8 +188,11 @@ export default function SignUpForm() {
                     <FormButton>Submit</FormButton>
                 </form>
                 <div className="pt-10">
-                    <p className="text-center text-dark mb-[20px]">Or login using</p>
+                    <p className="text-center text-dark mb-[20px] font-bold">Or login using</p>
                     <ProviderLoginList/>
+                </div>
+                <div className="pt-5 text-center">
+                    <p>Already have an account? Please login <Link href="/login" className="underline">here</Link>.</p>
                 </div>
             </div>
         </>

@@ -7,8 +7,8 @@ import FormButton from "./form-button";
 import userLogin from "@/actions/user-login";
 import { useRef, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
-// import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 
 export default function LoginForm() {
@@ -78,8 +78,11 @@ export default function LoginForm() {
                 }
             </form>
             <div className="pt-10">
-                <p className="text-center text-dark mb-[20px]">Or login using</p>
+                <p className="text-center text-dark mb-[20px] font-bold">Or login using</p>
                 <ProviderLoginList/>
+            </div>
+            <div className="text-center pt-5">
+                <p>Don't have an account? Please signup <Link href="/sign-up" className="underline">here</Link>.</p>
             </div>
         </div>
     );

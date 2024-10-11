@@ -91,8 +91,6 @@ export async function userSignup(formState: UserSignupFormState, formData: FormD
 
     } catch(error: unknown) {
 
-        console.log(error);
-
         if(error instanceof Error) {
             
             return {

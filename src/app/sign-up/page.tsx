@@ -1,7 +1,16 @@
 import SignUpForm from "@/components/sign-up-form";
+import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
-export default function SignUpPage() {
+export default async function SignUpPage() {
+    const sesson = await auth();
 
+    if(sesson) {
+        
+        redirect('/');
+
+    }
+    
     return (
         <main className="min-h-[100vh]">
             <section className="py-[60px]">

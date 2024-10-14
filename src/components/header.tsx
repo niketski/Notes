@@ -1,17 +1,9 @@
-'use client'
+import { auth } from "@/lib/auth";
 
-import { useSession } from "next-auth/react";
-import { useEffect } from "react";
+export default async function Header() {
+    const session = await auth();
 
-export default function Header() {
-    const { data, status } = useSession();
-
-    useEffect(() => {
-
-        console.log(data, status);
-
-    }, [data?.user, status]);
-    
+    console.log('header:', session);
 
     return (
         <header>
